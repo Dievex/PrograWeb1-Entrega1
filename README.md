@@ -114,7 +114,7 @@ Pruebas manuales (curl/Postman):
 - En los test se añade que se cierre la conexión de Mongoose en `afterAll` para evitar fallos.  
 - PWA básica: manifest y service worker. Solo funcional sirviendo por HTTP/HTTPS.
 - Observabilidad: Se ha empleado `morgan` en el desarrollo para logs y middleware de errores centralizado.
-- Uso de un servidor `Debian` en `Digital Ocean` para el despliegue de la aplicación. Se optó por esta opción debido a la simplicidad de despliegue y para tener centralizado `frontend` como `backend`.
+- Uso de un servidor `Debian` en `Digital Ocean` para el despliegue de la aplicación accesible desde el naveagador en la siguiente dirección: http://164.92.160.40 . Se optó por esta opción debido a la simplicidad de despliegue y para tener centralizado `frontend` como `backend`.
 - Separación de los estilos de cada página en archivos separados, manteniendo styles.css para estilos globales. Esto se ha hecho para mejorar la mantenibilidad y la legibilidad del código.
 - Uso de MongoDB Atlas: Se optó por utilizar MongoDB Atlas en lugar de una instancia local de MongoDB debido a los requisitos de recursos elevados que implicaría mantener una base de datos MongoDB en un servidor personal de Digital Ocean. MongoDB Atlas ofrece una capa gratuita que es suficiente para el desarrollo y testing del proyecto, reduciendo significativamente el consumo de CPU y memoria del servidor.
 - El audio de los mensajes se sirve desde el backend (aunque en un principio se hacía desde el frontend) para mejor seguridad y evitar duplicaciones de archivos.
