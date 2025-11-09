@@ -65,6 +65,8 @@ Frontend:
 - Abrir `frontend/index.html` o `frontend/auth.html` en el navegador.
 - Para que el Service Worker funcione, es necesario servir los archivos por HTTP y que la ruta `/service-worker.js` sea accesible desde el origen del frontend. En la versión subida al servidor web de Digital Ocean esta caracteristica no esta disponible.
 - La variable `API_URL` en `frontend/client.js` apunta a `http://localhost:3001` en el servidor apuntara a `http://tu_ip_del_servidor:3001`.
+- Para acceder a las caracteristicas de administrador se deben usar las siguientes credenciales(admin1@admin.com, 123456)
+- Para acceder a las caracteristicas de usuario estandar se deben usar las siguientes credenciales(user1@user.com, 123456) o registrarse como nuevo usuario.
 
 ## Endpoints principales
 Autenticación (`/auth`):
