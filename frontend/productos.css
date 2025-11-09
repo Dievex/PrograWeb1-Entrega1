@@ -1,0 +1,253 @@
+.controls {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.controls input {
+  flex: 1;
+  min-width: 250px;
+}
+
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin: 2rem 0;
+}
+
+.product-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.product-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: var(--radius-lg);
+  padding: 2px;
+  background: linear-gradient(135deg, var(--accent-violet), transparent 40%, transparent 60%, var(--neon-orange));
+  -webkit-mask: 
+    linear-gradient(#fff 0 0) content-box, 
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.product-card:hover::before {
+  opacity: 1;
+}
+
+.product-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-medium);
+  border-color: var(--accent-violet);
+}
+
+.product-media {
+  position: relative;
+  height: 200px;
+  overflow: hidden;
+  background: var(--bg-element);
+}
+
+.product-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.product-card:hover .product-media img {
+  transform: scale(1.05);
+}
+
+.product-badge {
+  position: absolute;
+  top: 0.75rem;
+  left: 0.75rem;
+  background: linear-gradient(135deg, var(--neon-orange), var(--neon-orange-dark));
+  color: white;
+  padding: 0.375rem 0.75rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.875rem;
+  font-weight: 600;
+  box-shadow: var(--shadow-soft);
+}
+
+.product-info {
+  padding: 1.25rem;
+}
+
+.product-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--neon-orange);
+  margin-bottom: 0.5rem;
+}
+
+.product-price {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+}
+
+.product-desc {
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  line-height: 1.4;
+}
+
+.product-inputs {
+  margin: 1rem 0;
+}
+
+.product-inputs input {
+  margin-bottom: 0.75rem;
+  background: var(--bg-element);
+}
+
+.product-actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.edit-btn {
+  background: linear-gradient(135deg, var(--neon-orange), var(--neon-orange-dark));
+  color: white;
+  flex: 1;
+}
+
+.delete-btn {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  color: white;
+  flex: 1;
+}
+
+.save-btn {
+  background: linear-gradient(135deg, var(--accent-violet), var(--accent-violet-light));
+  color: white;
+  flex: 1;
+}
+
+.sort-controls {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  margin: 1.5rem 0;
+  flex-wrap: wrap;
+}
+
+.sort-btn {
+  background: var(--bg-element);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-color);
+  padding: 0.625rem 1.25rem;
+  border-radius: var(--radius-md);
+  font-size: 0.875rem;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.sort-btn:hover {
+  border-color: var(--accent-violet);
+  color: var(--text-primary);
+  transform: translateY(-2px);
+}
+
+.paginacion {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 2rem 0;
+  flex-wrap: wrap;
+}
+
+.paginacion::before {
+  content: "Página:";
+  color: var(--text-muted);
+  margin-right: 0.5rem;
+  font-weight: 500;
+}
+
+.paginacion button {
+  background: var(--bg-element);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-md);
+  min-width: 2.5rem;
+  font-weight: 500;
+}
+
+.paginacion button:hover {
+  border-color: var(--neon-orange);
+  transform: translateY(-2px);
+}
+
+#admin-section {
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--border-color);
+}
+
+#form-producto {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+#form-producto > div:first-child {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+@media (max-width: 768px) {
+  .controls {
+    flex-direction: column;
+  }
+  
+  .controls input {
+    min-width: auto;
+  }
+  
+  .product-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .sort-controls {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  #form-producto > div:first-child {
+    grid-template-columns: 1fr;
+  }
+  
+  .paginacion {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  
+  .paginacion::before {
+    margin-right: 0;
+    margin-bottom: 0.5rem;
+  }
+}

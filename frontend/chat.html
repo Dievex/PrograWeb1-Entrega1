@@ -1,0 +1,76 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Party Store — Chat</title>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#6d28d9">
+  <link rel="icon" href="/icons/icon-192.png" sizes="192x192">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="chat.css">
+</head>
+<body data-page="chat">
+  <!-- Navegación por pestañas -->
+  <div id="tabs" class="tabs">
+    <div class="container">
+      <span style="font-weight:800; color:#ff8c42;">Party Store</span>
+      <button id="tab-productos" class="tab-btn">Productos</button>
+      <button id="tab-chat" class="tab-btn active">Chat</button>
+      <button id="logout-btn" class="logout-btn">Cerrar sesión</button>
+    </div>
+  </div>
+
+  <!-- Sección de Chat -->
+  <div id="chat" class="container">
+    <div class="chat-header">
+      <h1>Chat en tiempo real</h1>
+      <div id="user-count">Usuarios conectados: 0</div>
+    </div>
+
+    <div id="chat-status" class="mensaje" style="display:none"></div>
+    <div id="mensaje" class="mensaje"></div>
+
+    <div class="chat-controls">
+      <div id="room-bar" class="control-row">
+        <label for="room">Sala:</label>
+        <select id="room">
+          <option value="general" selected>General</option>
+          <option value="sala1">Sala 1</option>
+          <option value="sala2">Sala 2</option>
+          <option value="sala3">Sala 3</option>
+        </select>
+        <button id="join-room" type="button" class="primary">Entrar</button>
+      </div>
+
+      <div id="username-bar" class="control-row">
+        <span id="current-username">Tu nombre: Anónimo</span>
+      </div>
+
+      <div id="color-bar" class="control-row">
+        <label for="color">Tu color:</label>
+        <input id="color" type="color" value="#ff5e00" />
+        <button id="set-color" type="button" class="secondary">Guardar color</button>
+      </div>
+
+      <div id="history-bar" class="control-row">
+        <button id="btn-historial" type="button" class="secondary">Mostrar historial</button>
+      </div>
+    </div>
+
+    <ul id="messages"></ul>
+    <div id="typing"></div>
+
+    <form id="form-chat" action="">
+      <input id="input-chat" autocomplete="off" placeholder="Escribe tu mensaje..." />
+      <button id="send-chat" type="submit" class="primary">Enviar</button>
+    </form>
+
+    <audio id="fart-audio" src="http://localhost:3001/media/notificacion.mp3" preload="auto" playsinline style="display:none"></audio>
+  </div>
+
+  <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+  <script src="client.js?v=3"></script>
+</body>
+</html>

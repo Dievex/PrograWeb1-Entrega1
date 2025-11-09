@@ -1,0 +1,74 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Party Store — Productos</title>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#6d28d9">
+  <link rel="icon" href="/icons/icon-192.png" sizes="192x192">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="productos.css">
+</head>
+<body data-page="productos">
+  <!-- Navegación por pestañas -->
+  <div id="tabs" class="tabs">
+    <div class="container">
+      <span style="font-weight:800; color:#ff8c42;">Party Store</span>
+      <button id="tab-productos" class="tab-btn active">Productos</button>
+      <button id="tab-chat" class="tab-btn">Chat</button>
+      <button id="logout-btn" class="logout-btn">Cerrar sesión</button>
+    </div>
+  </div>
+
+  <!-- App protegida (visible solo si estás autenticado) -->
+  <div id="app" class="container">
+    <h1>Gestión de Productos</h1>
+
+    <h2>Lista de productos</h2>
+
+    <div class="controls">
+      <input type="text" id="busqueda" placeholder="Buscar producto...">
+      <button id="btn-cargar" class="primary">Cargar productos</button>
+    </div>
+
+    <div id="spinner" class="spinner" style="display:none"></div>
+
+    <!-- Controles de orden -->
+    <div class="sort-controls">
+      <span style="color:#c0c0e0;">Ordenar por:</span>
+      <button class="sort-btn" data-field="nombre">Nombre</button>
+      <button class="sort-btn" data-field="precio">Precio</button>
+      <button class="sort-btn" data-field="descripcion">Descripción</button>
+    </div>
+
+    <!-- Grid para renderizar productos -->
+    <div id="grid-productos" class="product-grid"></div>
+
+    <!-- Paginación -->
+    <div id="paginacion" class="paginacion"></div>
+
+    <!-- Formulario para añadir producto (solo visible para admin) -->
+    <div id="admin-section" style="margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--border-color);">
+      <h2>Añadir nuevo producto</h2>
+      <form id="form-producto">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1rem;">
+          <input type="text" id="nombre" placeholder="Nombre del producto" required>
+          <input type="number" id="precio" placeholder="Precio" step="0.01" required>
+          <input type="text" id="descripcion" placeholder="Descripción" required>
+        </div>
+        <div style="margin-bottom: 1rem;">
+          <input type="file" id="imagen" accept="image/*" style="padding: 0.5rem;">
+        </div>
+        <button type="submit" class="primary" style="width: 100%;">Guardar producto</button>
+      </form>
+    </div>
+
+    <div id="mensaje" class="mensaje"></div>
+  </div>
+
+  <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+  <script src="client.js?v=3"></script>
+</body>
+</html>

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Redirección</title>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#2196f3">
+  <link rel="icon" href="/icons/icon-192.png" sizes="192x192">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <noscript>Necesitas habilitar JavaScript para usar la aplicación.</noscript>
+  <script>
+    (function(){
+      try {
+        var token = sessionStorage.getItem('token');
+        var target = token ? 'productos.html' : 'auth.html';
+        window.location.replace(target);
+      } catch (e) {
+        console.error('Error en redirección inicial', e);
+        window.location.replace('auth.html');
+      }
+    })();
+  </script>
+</body>
+</html>

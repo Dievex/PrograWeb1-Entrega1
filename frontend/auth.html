@@ -1,0 +1,42 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Autenticación - Party Store </title>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#6d28d9">
+  <link rel="icon" href="/icons/icon-192.png" sizes="192x192">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="auth.css">
+</head>
+<body data-page="auth">
+  <div id="auth" class="auth">
+    <div class="container">
+      <h1>Party Store</h1>
+      <h2>Autenticación</h2>
+      
+      <form id="login-form">
+        <input type="email" id="login-email" placeholder="Email" required>
+        <input type="password" id="login-password" placeholder="Contraseña" required>
+        <button type="submit" class="primary" style="width: 100%; margin-top: 1rem;">Iniciar sesión</button>
+      </form>
+
+      <form id="register-form" style="display:none">
+        <input type="text" id="register-nombre" placeholder="Nombre completo" required>
+        <input type="email" id="register-email" placeholder="Email" required>
+        <input type="password" id="register-password" placeholder="Contraseña" required>
+        <button type="submit" class="primary" style="width: 100%; margin-top: 1rem;">Registrarse</button>
+      </form>
+
+      <p style="text-align: center; margin-top: 1.5rem;">
+        <a href="#" id="show-register" style="color: var(--neon-orange); text-decoration: none;">¿No tienes cuenta? Regístrate</a>
+        <a href="#" id="show-login" style="color: var(--neon-orange); text-decoration: none; display:none">Ya tengo cuenta, iniciar sesión</a>
+      </p>
+      <div id="mensaje" class="mensaje"></div>
+    </div>
+  </div>
+
+  <script src="client.js?v=3"></script>
+</body>
+</html>
