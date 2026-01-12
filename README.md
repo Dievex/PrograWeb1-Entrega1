@@ -180,3 +180,9 @@ El endpoint `/graphql` maneja las siguientes operaciones:
 - **Coherencia Visual**: Las nuevas pantallas (Carrito, Admin) se han diseñado siguiendo estrictamente el sistema de estilos existente (CSS variables, paleta de colores, componentes de UI) para garantizar una experiencia de usuario consistente en toda la aplicación.
 
 - **Nuevos archivos.js en el front**: Además, se han añadido archivos `.js` separados por pantalla (por ejemplo, `frontend/cart.js` y `frontend/admin.js`) en lugar de seguir ampliando el antiguo `frontend/client.js`. Esto mejora la modularidad y mantenibilidad, facilita la separación de responsabilidades y reduce el riesgo de efectos colaterales entre funcionalidades al evolucionar cada vista de forma independiente.
+
+- **Arquitectura en capas (Controller/Service/DAO)**: Backend organizado para escalar y mantener el código limpio:
+  - Controller: recibe peticiones HTTP y construye respuestas.
+  - Service: encapsula la lógica de negocio y reglas de aplicación.
+  - Model/DAO: Model define estructura y validaciones; DAO encapsula consultas/mutaciones a la base de datos.
+  Las rutas delegan en controladores, los servicios concentran reglas y los DAOs aíslan Mongoose. `server.js` se ha reducido a orquestador mínimo (HTTP + Socket.IO + conexión a Mongo), moviendo la configuración de Express a app.js y la de GraphQL a graphql/apollo.js

@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const Producto = require('../models/Producto');
+const productosController = require('../controllers/productosController');
 const multer = require('multer');
 const fs = require('fs');
 const path = require('path');
@@ -34,75 +34,15 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage });
 
-// Obtener todos (usuarios autenticados pueden ver)
-router.get('/', async (req, res, next) => {
-  try {
-    const productos = await Producto.find().sort({ createdAt: -1 });
-    res.json(productos);
-  } catch (err) {
-    next(err);
-  }
-});
+router.get('/', productosController.listar);
 
-// Crear (solo admin)
-router.post('/', requireAdmin, async (req, res, next) => {
-  try {
-    const nuevo = new Producto(req.body);
-    await nuevo.save();
-    res.status(201).json(nuevo);
-  } catch (err) {
-    next(err);
-  }
-});
+router.post('/', requireAdmin, productosController.crear);
 
-// Actualizar (solo admin)
-router.put('/:id', requireAdmin, async (req, res, next) => {
-  try {
-    const actualizado = await Producto.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      { new: true }
-    );
-    if (!actualizado)
-      return res.status(404).json({ error: 'Producto no encontrado' });
-    res.json(actualizado);
-  } catch (err) {
-    next(err);
-  }
-});
+router.put('/:id', requireAdmin, productosController.actualizar);
 
-// Eliminar (solo admin)
-router.delete('/:id', requireAdmin, async (req, res, next) => {
-  try {
-    const eliminado = await Producto.findByIdAndDelete(req.params.id);
-    if (!eliminado)
-      return res.status(404).json({ error: 'Producto no encontrado' });
-    res.json({ mensaje: 'Producto eliminado' });
-  } catch (err) {
-    next(err);
-  }
-});
+router.delete('/:id', requireAdmin, productosController.eliminar);
 
 // Subir imagen de producto (solo admin)
-router.post(
-  '/:id/imagen',
-  requireAdmin,
-  upload.single('imagen'),
-  async (req, res, next) => {
-    try {
-      const prod = await Producto.findById(req.params.id);
-      if (!prod)
-        return res.status(404).json({ error: 'Producto no encontrado' });
-      if (!req.file)
-        return res.status(400).json({ error: 'No se proporcionó archivo' });
-      const publicUrl = `/uploads/${req.file.filename}`;
-      prod.imagenUrl = publicUrl;
-      await prod.save();
-      res.json({ imagenUrl: publicUrl });
-    } catch (err) {
-      next(err);
-    }
-  }
-);
+router.post('/:id/imagen', requireAdmin, upload.single('imagen'), productosController.subirImagen);
 
 module.exports = router;
