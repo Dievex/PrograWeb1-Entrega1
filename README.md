@@ -65,8 +65,6 @@ Frontend:
 - Abrir `frontend/index.html` o `frontend/auth.html` en el navegador.
 - Para que el Service Worker funcione, es necesario servir los archivos por HTTP y que la ruta `/service-worker.js` sea accesible desde el origen del frontend. En la versión subida al servidor web de Digital Ocean esta caracteristica no esta disponible.
 - La variable `API_URL` en `frontend/client.js` apunta a `http://localhost:3001` en el servidor apuntara a `http://tu_ip_del_servidor:3001`.
-- Para acceder a las caracteristicas de administrador se deben usar las siguientes credenciales(admin1@admin.com, 123456)
-- Para acceder a las caracteristicas de usuario estandar se deben usar las siguientes credenciales(user1@user.com, 123456) o registrarse como nuevo usuario.
 
 ## Endpoints principales
 Autenticación (`/auth`):
@@ -114,7 +112,7 @@ Pruebas manuales (curl/Postman):
 - En los test se añade que se cierre la conexión de Mongoose en `afterAll` para evitar fallos.  
 - PWA básica: manifest y service worker. Solo funcional sirviendo por HTTP/HTTPS.
 - Observabilidad: Se ha empleado `morgan` en el desarrollo para logs y middleware de errores centralizado.
-- Uso de un servidor `Debian` en `Digital Ocean` para el despliegue de la aplicación accesible desde el naveagador en la siguiente dirección: http://164.92.160.40 . Se optó por esta opción debido a la simplicidad de despliegue y para tener centralizado `frontend` como `backend`.
+- Uso de un servidor `Debian` en `Digital Ocean` para el despliegue de la aplicación. Se optó por esta opción debido a la simplicidad de despliegue y para tener centralizado `frontend` como `backend`.
 - Separación de los estilos de cada página en archivos separados, manteniendo styles.css para estilos globales. Esto se ha hecho para mejorar la mantenibilidad y la legibilidad del código.
 - Uso de MongoDB Atlas: Se optó por utilizar MongoDB Atlas en lugar de una instancia local de MongoDB debido a los requisitos de recursos elevados que implicaría mantener una base de datos MongoDB en un servidor personal de Digital Ocean. MongoDB Atlas ofrece una capa gratuita que es suficiente para el desarrollo y testing del proyecto, reduciendo significativamente el consumo de CPU y memoria del servidor.
 - El audio de los mensajes se sirve desde el backend (aunque en un principio se hacía desde el frontend) para mejor seguridad y evitar duplicaciones de archivos.
@@ -127,3 +125,56 @@ Pruebas manuales (curl/Postman):
 - Backend: `cd backend && npm install && npm start` (con `.env` configurado)
 - Frontend: servir `cd frontend && npx serve -p 3000`
 
+---
+
+# Actualización E-commerce (GraphQL + Orders)
+
+El proyecto ha evolucionado para incluir funcionalidades completas de comercio electrónico utilizando **GraphQL** como capa principal para la gestión de datos, conviviendo con la API REST existente.
+
+## Nuevas Tecnologías
+- **Apollo Server (@apollo/server)**: Servidor GraphQL integrado con Express.
+- **GraphQL**: Lenguaje de consulta para manejar productos, usuarios y pedidos.
+
+## Nueva Estructura
+```
+/backend
+  graphql/
+    schema.js       # Definición de tipos (Type Definitions)
+    resolvers.js    # Lógica de negocio (Queries y Mutations)
+  models/
+    Orden.js        # Nuevo modelo para pedidos (colección: 'ordenes')
+```
+
+## Funcionalidades Añadidas
+
+### 1. Gestión de Pedidos (Orders)
+- **Modelo de Datos (`Orden`)**: Almacena el usuario, lista de productos con cantidad y precio histórico, total y estado.
+- **Flujo de Compra**:
+  - El frontend gestiona el carrito localmente (`localStorage`).
+  - Al finalizar compra, se ejecuta la mutación `createOrder`.
+  - El backend valida precios, calcula el total y crea la orden en estado `PENDING`.
+
+### 2. Panel de Administración (`/admin.html`)
+- Interfaz exclusiva para usuarios con rol `admin`.
+- **Gestión de Usuarios**: Listado completo, eliminación y cambio de roles (User/Admin) mediante mutaciones GraphQL.
+- **Gestión de Pedidos**: Visualización de pedidos filtrados por estado (Pendiente/Completado) y actualización de estado.
+
+### 3. API GraphQL (`/graphql`)
+El endpoint `/graphql` maneja las siguientes operaciones:
+
+**Queries:**
+- `products`: Obtiene el catálogo.
+- `orders(status?)`: Obtiene pedidos (filtrados por usuario o todos si es admin).
+- `users`: Obtiene todos los usuarios (solo admin).
+
+**Mutations:**
+- `createOrder`: Crea un nuevo pedido desde el carrito.
+- `updateOrderStatus`: Cambia el estado de un pedido (admin).
+- `deleteUser` / `toggleUserRole`: Gestión de usuarios (admin).
+
+## Decisiones de Diseño
+- **Híbrido REST + GraphQL**: Se mantuvieron los endpoints REST de autenticación (`/auth`) y subida de archivos por simplicidad, mientras que toda la lógica de negocio compleja (pedidos, relaciones) se migró a GraphQL para evitar "over-fetching" y tener un esquema tipado.
+
+- **Carrito Cliente-Servidor**: El carrito es temporal en el cliente, se recoge en el Local Storage. Solo se persiste en la base de datos cuando se convierte en una Orden confirmada.
+
+- **Coherencia Visual**: Las nuevas pantallas (Carrito, Admin) se han diseñado siguiendo estrictamente el sistema de estilos existente (CSS variables, paleta de colores, componentes de UI) para garantizar una experiencia de usuario consistente en toda la aplicación.

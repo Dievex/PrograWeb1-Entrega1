@@ -1,4 +1,22 @@
-const API_URL = "http://localhost:3001";
+// Construir URL del API dinámicamente según el entorno
+// - En desarrollo: localhost:3001
+// - En producción: mismo hostname que el frontend, puerto 3001
+function getApiUrl() {
+  try {
+    const protocol = (typeof window !== 'undefined' && window.location && window.location.protocol) ? window.location.protocol : 'http:';
+    const hostname = (typeof window !== 'undefined' && window.location && window.location.hostname) ? window.location.hostname : 'localhost';
+    const isLocal = ['localhost', '127.0.0.1', '::1'].includes(hostname);
+    const port = 3001;
+    if (isLocal) return `http://localhost:${port}`;
+    return `${protocol}//${hostname}:${port}`;
+  } catch {
+    return 'http://localhost:3001';
+  }
+}
+
+const API_URL = (typeof window !== 'undefined' && window.__API_URL__)
+  ? window.__API_URL__
+  : getApiUrl();
 let productos = [];
 let paginaActual = 1;
 const porPagina = 6;
@@ -39,7 +57,11 @@ function resumeAudio() {
 }
 ['click','keydown','touchstart'].forEach(function(ev){ window.addEventListener(ev, resumeAudio, { once: true }); });
 const audioEl = document.getElementById('fart-audio');
-audioEl && (audioEl.volume = 0.9);
+if (audioEl) {
+  audioEl.volume = 0.9;
+  // Configurar la URL del audio según el entorno, usando el mismo host del API
+  audioEl.src = `${API_URL}/media/notificacion.mp3`;
+}
 let audioEnabled = false;
 function unlockAudio() {
   audioEnabled = true;
@@ -125,6 +147,16 @@ function actualizarPantallas() {
   }
   if (tituloAnadirEl) {
     tituloAnadirEl.style.display = isAdmin() ? 'block' : 'none';
+  }
+  const adminLink = document.getElementById('admin-link');
+  if (adminLink) {
+    adminLink.style.display = isAdmin() ? 'block' : 'none';
+  }
+  
+  // Ocultar carrito si es admin
+  const cartLink = document.getElementById('cart-link');
+  if (cartLink) {
+    cartLink.style.display = isAdmin() ? 'none' : 'block';
   }
 }
 
@@ -269,7 +301,8 @@ function initChatIfNeeded() {
     mostrarMensaje('No se pudo cargar el cliente de chat. Revisa la conexión.', 'error');
     return;
   }
-  socket = io('http://localhost:3001', {
+  // Conectar Socket.IO al mismo host del API
+  socket = io(API_URL, {
     path: '/socket.io',
     transports: ['websocket', 'polling'],
     withCredentials: true,
@@ -339,6 +372,14 @@ function initChatIfNeeded() {
     messagesEl.appendChild(li);
     messagesEl.scrollTop = messagesEl.scrollHeight;
     playFart();
+  });
+
+  socket.on('system message', function (msg) {
+    var li = document.createElement('li');
+    li.textContent = msg.text;
+    li.classList.add('system');
+    messagesEl.appendChild(li);
+    messagesEl.scrollTop = messagesEl.scrollHeight;
   });
 
   socket.on('typing', function (data) {
@@ -581,7 +622,11 @@ function renderProductos() {
         <button class="save-btn" onclick="guardarProducto('${p._id}')" style="display:none">Guardar</button>
         <button class="delete-btn" onclick="eliminarProducto('${p._id}')">Eliminar</button>
       </div>
-    ` : '';
+    ` : `
+      <div class="product-actions">
+        <button class="primary" onclick="addToCartFromId('${p._id}')">Añadir al carrito</button>
+      </div>
+    `;
 
     const card = document.createElement('div');
     card.className = 'product-card';
@@ -681,3 +726,12 @@ const sortBtns = document.querySelectorAll('.sort-btn');
 sortBtns.forEach(btn => {
   btn.addEventListener('click', () => ordenarPor(btn.dataset.field));
 });
+
+function addToCartFromId(id) {
+  const p = productos.find(prod => prod._id === id);
+  if (p && window.addToCart) {
+    window.addToCart(p);
+  } else if (!window.addToCart) {
+    console.error('addToCart no está definido. Asegúrate de cargar cart.js');
+  }
+}

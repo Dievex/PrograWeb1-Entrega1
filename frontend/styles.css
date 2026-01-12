@@ -99,6 +99,20 @@ body::before {
     linear-gradient(#fff 0 0) content-box, 
     linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
+  mask: 
+    linear-gradient(#fff 0 0) content-box, 
+    linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  background: linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
   mask-composite: exclude;
   pointer-events: none;
   opacity: 0.7;
@@ -107,28 +121,41 @@ body::before {
 /* Navegación */
 .tabs .container {
   display: flex;
+  justify-content: space-between;
   align-items: center;
   gap: 1rem;
   padding: 1rem 1.5rem;
   margin-top: 1rem;
   background: var(--bg-surface);
   border: 1px solid var(--border-color);
+  flex-wrap: wrap; /* Permitir wrap si es necesario */
 }
 
-.tab-btn {
+.nav-links {
+  display: flex;
+  gap: 0.5rem; /* Reducir el gap entre botones */
+  align-items: center;
+  flex-wrap: wrap; /* Permitir que los botones bajen de línea si no caben */
+}
+
+.tab-btn, .logout-btn, .nav-links a {
   background: var(--bg-element);
   color: var(--text-secondary);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-md);
-  padding: 0.75rem 1.5rem;
+  padding: 0.5rem 1rem; /* Reducir un poco el padding */
   font-weight: 500;
   transition: all 0.3s ease;
   cursor: pointer;
   position: relative;
   overflow: hidden;
+  text-decoration: none;
+  display: inline-block;
+  white-space: nowrap; /* Evitar que el texto del botón se parta */
+  font-size: 0.95rem; /* Ajustar tamaño de fuente */
 }
 
-.tab-btn::before {
+.tab-btn::before, .logout-btn::before, .nav-links a::before {
   content: "";
   position: absolute;
   top: 0;
@@ -139,17 +166,18 @@ body::before {
   transition: left 0.5s;
 }
 
-.tab-btn:hover::before {
+.tab-btn:hover::before, .logout-btn:hover::before, .nav-links a:hover::before {
   left: 100%;
 }
 
-.tab-btn:hover {
+.tab-btn:hover, .nav-links a:hover {
   border-color: var(--accent-violet);
   transform: translateY(-2px);
   box-shadow: var(--shadow-soft);
+  color: var(--text-primary);
 }
 
-.tab-btn.active {
+.tab-btn.active, .nav-links a.active {
   background: linear-gradient(135deg, var(--neon-orange), var(--neon-orange-dark));
   color: white;
   border-color: var(--neon-orange);
@@ -158,15 +186,10 @@ body::before {
 }
 
 .logout-btn {
-  margin-left: auto;
+  margin-left: 0; /* Adjusted since it's in nav-links usually */
   background: linear-gradient(135deg, var(--accent-violet), var(--accent-violet-light));
   color: white;
   border: none;
-  border-radius: var(--radius-md);
-  padding: 0.75rem 1.5rem;
-  font-weight: 500;
-  transition: all 0.3s ease;
-  cursor: pointer;
 }
 
 .logout-btn:hover {
@@ -179,6 +202,7 @@ h1 {
   font-size: 2.25rem;
   font-weight: 700;
   background: linear-gradient(135deg, var(--neon-orange), var(--accent-violet-light));
+  background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   margin-bottom: 1rem;
@@ -261,12 +285,12 @@ button:hover {
   box-shadow: var(--shadow-medium);
 }
 
-button.primary {
+button.primary, .btn-primary {
   background: linear-gradient(135deg, var(--neon-orange), var(--neon-orange-dark));
   color: white;
 }
 
-button.primary:hover {
+button.primary:hover, .btn-primary:hover {
   box-shadow: var(--shadow-glow);
 }
 
@@ -278,6 +302,11 @@ button.secondary {
 
 button.secondary:hover {
   border-color: var(--accent-violet);
+}
+
+button.danger, .btn-delete, .btn-remove {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  color: white;
 }
 
 /* Mensajes */
@@ -318,6 +347,81 @@ button.secondary:hover {
   100% { transform: rotate(360deg); }
 }
 
+/* Tablas */
+.data-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin-top: 1.5rem;
+  width: 100%;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.data-table th, .data-table td {
+  padding: 1rem;
+  text-align: left;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.data-table th {
+  background: var(--bg-element);
+  color: var(--neon-orange);
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
+}
+
+.data-table tr:last-child td {
+  border-bottom: none;
+}
+
+.data-table tr:hover {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+/* Modales */
+.modal {
+  display: none; 
+  position: fixed; 
+  z-index: 100; 
+  left: 0; 
+  top: 0; 
+  width: 100%; 
+  height: 100%; 
+  overflow: auto; 
+  background-color: rgba(13, 11, 29, 0.8); 
+  backdrop-filter: blur(5px);
+}
+
+.modal-content {
+  background-color: var(--bg-card);
+  margin: 10% auto; 
+  padding: 2rem; 
+  border: 1px solid var(--border-color); 
+  width: 90%; 
+  max-width: 600px; 
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-glow);
+  color: var(--text-primary);
+  position: relative;
+}
+
+.close {
+  color: var(--text-muted);
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.close:hover {
+  color: var(--neon-orange);
+}
+
 /* Scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
@@ -350,12 +454,22 @@ button.secondary:hover {
     gap: 0.75rem;
   }
   
-  .logout-btn {
-    margin-left: 0;
+  .nav-links {
+    flex-direction: column;
     width: 100%;
+  }
+
+  .nav-links a, .logout-btn {
+    width: 100%;
+    text-align: center;
   }
   
   h1 {
     font-size: 1.75rem;
+  }
+
+  .data-table {
+    display: block;
+    overflow-x: auto;
   }
 }

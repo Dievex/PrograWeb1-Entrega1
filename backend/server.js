@@ -6,6 +6,12 @@ const path = require('path');
 const dotenv = require('dotenv');
 const http = require('http');
 const { Server } = require('socket.io');
+const { ApolloServer } = require('@apollo/server');
+const { expressMiddleware } = require('@apollo/server/express4');
+const jwt = require('jsonwebtoken');
+const typeDefs = require('./graphql/schema');
+const resolvers = require('./graphql/resolvers');
+
 const Mensaje = require('./models/Mensaje');
 
 dotenv.config();
@@ -58,8 +64,43 @@ console.log('Intentando conectar a MongoDB Atlas...');
 
 mongoose
   .connect(MONGO_URI, config.MONGO_OPTIONS)
-  .then(() => {
+  .then(async () => {
     console.log('Conectado a MongoDB');
+
+    // Configuración de Apollo Server
+    const apolloServer = new ApolloServer({
+      typeDefs,
+      resolvers,
+    });
+
+    await apolloServer.start();
+
+    app.use(
+      '/graphql',
+      cors(),
+      express.json(),
+      expressMiddleware(apolloServer, {
+        context: async ({ req }) => {
+          const authHeader = req.headers.authorization || '';
+          const token = authHeader.startsWith('Bearer ')
+            ? authHeader.slice(7)
+            : null;
+          if (token) {
+            try {
+              const secret =
+                process.env.JWT_SECRET || 'dev_secret_cambia_esto';
+              const user = jwt.verify(token, secret);
+              return { user };
+            } catch (err) {
+              // Token inválido, usuario no autenticado
+            }
+          }
+          return { user: null };
+        },
+      })
+    );
+    console.log('Apollo Server listo en /graphql');
+
     if (config.NODE_ENV !== 'test') {
       server.listen(PORT, () =>
         console.log(`Servidor en http://localhost:${PORT}`)

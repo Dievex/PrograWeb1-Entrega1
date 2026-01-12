@@ -1,0 +1,92 @@
+@startuml architecture
+!theme plain
+skinparam componentStyle rectangle
+skinparam handwritten false
+skinparam defaultFontName Arial
+skinparam backgroundColor white
+left to right direction
+
+' Definición de colores y estilos
+skinparam component {
+  BackgroundColor white
+  BorderColor #333333
+  ArrowColor #333333
+}
+
+skinparam package {
+  BackgroundColor transparent
+  BorderColor #666666
+  FontColor #666666
+}
+
+package "CLIENTE (Frontend)" as client_pkg {
+  component "Páginas HTML\n(index, auth, chat,\nproductos, cart, admin)" as html_pages
+  component "Lógica Cliente\n(client.js, cart.js, admin.js)" as client_js
+  component "Estilos CSS" as styles
+}
+
+package "CAPA API (Node.js + Express)" as api_pkg {
+  component "Middleware\n(Auth JWT)" as middleware
+  component "Rutas REST\n(Auth, Productos, Chat)" as routes
+  component "Apollo Server\n(GraphQL Endpoint)" as graphql_server
+  
+  note bottom of routes: Lógica de negocio\n(Legacy/REST)
+  note bottom of graphql_server: Nueva Lógica\n(Pedidos, Admin)
+}
+
+package "LÓGICA DE NEGOCIO" as logic_pkg {
+  component "Bcrypt\n(Cifrado)" as bcrypt
+  component "Multer\n(Subidas)" as multer
+  component "Socket.IO\n(Manejador)" as socket_handler
+  component "GraphQL Resolvers" as resolvers
+}
+
+package "DATOS Y ALMACENAMIENTO" as data_pkg {
+  package "Modelos" {
+    component "Usuario" as user_model
+    component "Producto" as product_model
+    component "Mensaje" as chat_model
+    component "Orden" as order_model
+  }
+  
+  package "Persistencia" {
+    database "MongoDB Atlas" as mongodb
+    folder "Almacenamiento Local\n(uploads/)" as local_storage
+  }
+}
+
+' Relaciones Frontend -> API
+client_js --> routes : HTTP/REST + JWT (Auth, Uploads)
+client_js --> graphql_server : HTTP/POST + JWT (Pedidos, Admin)
+client_js <--> socket_handler : WebSocket
+
+' Relaciones Internas API
+routes --> middleware : Verifica Auth
+graphql_server --> middleware : Verifica Auth (Context)
+middleware --> routes : Siguiente (Next)
+
+' Lógica de Negocio
+routes --> bcrypt : Cifrar
+routes --> multer : Procesar Archivos
+routes --> socket_handler : Eventos
+
+graphql_server --> resolvers : Ejecuta
+
+' Acceso a Datos
+routes --> user_model
+routes --> product_model
+
+resolvers --> product_model
+resolvers --> user_model
+resolvers --> order_model
+
+socket_handler --> chat_model
+
+multer --> local_storage
+
+user_model --> mongodb
+product_model --> mongodb
+chat_model --> mongodb
+order_model --> mongodb
+
+@enduml

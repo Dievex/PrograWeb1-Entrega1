@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Mi Tienda - Carrito</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="styles.css?v=5">
+  <style>
+    .cart-item { 
+      display: flex; 
+      justify-content: space-between; 
+      align-items: center; 
+      padding: 1.5rem; 
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      margin-bottom: 1rem;
+      transition: all 0.3s ease;
+    }
+    .cart-item:hover {
+      border-color: var(--accent-violet);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-medium);
+    }
+    .cart-total { 
+      font-size: 1.5rem; 
+      font-weight: bold; 
+      margin-top: 2rem; 
+      text-align: right; 
+      color: var(--neon-orange);
+      padding: 1.5rem;
+      background: var(--bg-surface);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-color);
+    }
+    .empty-cart { 
+      text-align: center; 
+      margin-top: 3rem; 
+      color: var(--text-secondary);
+      font-size: 1.2rem;
+    }
+    .cart-item-info strong {
+      color: var(--neon-orange);
+      font-size: 1.1rem;
+    }
+    .cart-item-info div {
+      color: var(--text-secondary);
+      margin-top: 0.5rem;
+    }
+    .cart-item-price {
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: var(--text-primary);
+      margin-right: 1.5rem;
+    }
+    
+    @media (max-width: 768px) {
+      .cart-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+      }
+      .cart-item > div:last-child {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 0.5rem;
+      }
+    }
+  </style>
+</head>
+<body data-page="cart">
+  <!-- Navegación -->
+  <div id="tabs" class="tabs">
+    <div class="container">
+      <span style="font-weight:800; color:#ff8c42; font-size:1.2rem;">Party Store</span>
+      <div class="nav-links">
+        <a href="productos.html" class="tab-btn" style="text-decoration:none;">Productos</a>
+        <a href="chat.html" class="tab-btn" style="text-decoration:none;">Chat</a>
+        <a href="cart.html" id="cart-link" class="tab-btn active" style="text-decoration:none;">Carrito</a>
+        <a href="admin.html" id="admin-link" class="tab-btn" style="display:none; text-decoration:none;">Admin</a>
+        <a href="#" id="logout-btn" class="logout-btn" style="text-decoration:none;">Salir</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <h1>Tu Carrito</h1>
+    <div id="cart-items"></div>
+    <div class="cart-total" id="cart-total" style="display:none">
+      <div style="margin-bottom: 1rem;">Total: <span id="total-amount" style="color: white;">0</span></div>
+      <button class="primary" id="btn-checkout">Finalizar Compra</button>
+    </div>
+    <div id="empty-msg" class="empty-cart" style="display:none">
+      <p style="margin-bottom: 1rem;">Tu carrito está vacío.</p>
+      <a href="productos.html" class="tab-btn" style="display: inline-block;">Volver a la tienda</a>
+    </div>
+    
+    <div id="spinner" class="spinner" style="display:none"></div>
+    <div id="mensaje" class="mensaje"></div>
+  </div>
+
+  <script src="client.js"></script>
+  <script src="cart.js"></script>
+</body>
+</html>

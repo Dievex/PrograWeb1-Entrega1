@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Mi Tienda - Admin</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="styles.css?v=5">
+  <style>
+    .admin-tabs { margin-bottom: 2rem; border-bottom: 2px solid var(--border-color); display: flex; gap: 1rem; }
+    .admin-tabs button { 
+      padding: 10px 20px; 
+      background: none; 
+      border: none; 
+      font-size: 1.1rem; 
+      cursor: pointer; 
+      border-bottom: 3px solid transparent; 
+      color: var(--text-secondary);
+      border-radius: 0;
+    }
+    .admin-tabs button:hover {
+      color: var(--text-primary);
+      background: none;
+      box-shadow: none;
+      transform: none;
+    }
+    .admin-tabs button.active { 
+      border-bottom-color: var(--neon-orange); 
+      font-weight: bold; 
+      color: var(--neon-orange);
+    }
+    .action-btn { padding: 5px 10px; cursor: pointer; border: none; border-radius: 3px; margin-right: 5px; font-size: 0.9rem; }
+    .btn-role { background: linear-gradient(135deg, #17a2b8, #138496); color: white; }
+    .btn-view { background: linear-gradient(135deg, #28a745, #218838); color: white; }
+    .status-pending { color: #ffc107; font-weight: bold; }
+    .status-completed { color: #28a745; font-weight: bold; }
+    
+    .filter-controls {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    .filter-btn {
+      padding: 0.5rem 1rem;
+      font-size: 0.9rem;
+    }
+    
+    .filter-btn.active {
+      background: var(--neon-orange);
+      color: white;
+    }
+
+    #order-detail-content p {
+      margin-bottom: 0.5rem;
+      color: var(--text-secondary);
+    }
+    #order-detail-content strong {
+      color: var(--text-primary);
+    }
+    #order-detail-content h3 {
+      color: var(--neon-orange);
+      margin-top: 1.5rem;
+      margin-bottom: 1rem;
+      font-size: 1.2rem;
+    }
+  </style>
+</head>
+<body data-page="admin">
+  <!-- Navegación -->
+  <div id="tabs" class="tabs">
+    <div class="container">
+      <span style="font-weight:800; color:#ff8c42; font-size:1.2rem;">Party Store</span>
+      <div class="nav-links">
+        <a href="productos.html" class="tab-btn" style="text-decoration:none;">Productos</a>
+        <a href="chat.html" class="tab-btn" style="text-decoration:none;">Chat</a>
+        <a href="cart.html" id="cart-link" class="tab-btn" style="text-decoration:none;">Carrito</a>
+        <a href="admin.html" class="tab-btn active" style="text-decoration:none;">Admin</a>
+        <a href="#" id="logout-btn" class="logout-btn" style="text-decoration:none;">Salir</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <h1>Panel de Administración</h1>
+    
+    <div class="admin-tabs">
+      <button id="tab-users-btn" class="active" onclick="switchTab('users')">Usuarios</button>
+      <button id="tab-orders-btn" onclick="switchTab('orders')">Pedidos</button>
+    </div>
+
+    <div id="users-view">
+      <h2>Gestión de Usuarios</h2>
+      <div style="overflow-x: auto;">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Nombre</th>
+              <th>Email</th>
+              <th>Rol</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="users-table-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div id="orders-view" style="display:none">
+      <h2>Gestión de Pedidos</h2>
+      <div class="filter-controls">
+        <button onclick="loadOrders('')" class="secondary filter-btn">Todos</button>
+        <button onclick="loadOrders('PENDING')" class="secondary filter-btn">Pendientes</button>
+        <button onclick="loadOrders('COMPLETED')" class="secondary filter-btn">Completados</button>
+      </div>
+      <div style="overflow-x: auto;">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>ID Pedido</th>
+              <th>Usuario</th>
+              <th>Total</th>
+              <th>Estado</th>
+              <th>Fecha</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="orders-table-body"></tbody>
+        </table>
+      </div>
+    </div>
+    
+    <div id="spinner" class="spinner" style="display:none"></div>
+    <div id="mensaje" class="mensaje"></div>
+  </div>
+
+  <div id="order-modal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal()">&times;</span>
+      <h2>Detalle del Pedido</h2>
+      <div id="order-detail-content"></div>
+    </div>
+  </div>
+
+  <script src="client.js"></script>
+  <script src="admin.js"></script>
+</body>
+</html>
