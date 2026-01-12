@@ -178,3 +178,5 @@ El endpoint `/graphql` maneja las siguientes operaciones:
 - **Carrito Cliente-Servidor**: El carrito es temporal en el cliente, se recoge en el Local Storage. Solo se persiste en la base de datos cuando se convierte en una Orden confirmada.
 
 - **Coherencia Visual**: Las nuevas pantallas (Carrito, Admin) se han diseñado siguiendo estrictamente el sistema de estilos existente (CSS variables, paleta de colores, componentes de UI) para garantizar una experiencia de usuario consistente en toda la aplicación.
+
+- **Nuevos archivos.js en el front**: Además, se han añadido archivos `.js` separados por pantalla (por ejemplo, `frontend/cart.js` y `frontend/admin.js`) en lugar de seguir ampliando el antiguo `frontend/client.js`. Esto mejora la modularidad y mantenibilidad, facilita la separación de responsabilidades y reduce el riesgo de efectos colaterales entre funcionalidades al evolucionar cada vista de forma independiente.
